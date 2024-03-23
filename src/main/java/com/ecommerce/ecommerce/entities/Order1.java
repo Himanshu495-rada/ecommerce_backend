@@ -1,19 +1,20 @@
-package entities;
+package com.ecommerce.ecommerce.entities;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
+
 
 @Entity
-public class Order {
+public class Order1 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
-    private LocalDateTime orderTime;
+
     private double orderPrice;
 
     @ManyToOne
@@ -28,13 +29,7 @@ public class Order {
 		this.orderId = orderId;
 	}
 
-	public LocalDateTime getOrderTime() {
-		return orderTime;
-	}
 
-	public void setOrderTime(LocalDateTime orderTime) {
-		this.orderTime = orderTime;
-	}
 
 	public double getOrderPrice() {
 		return orderPrice;
@@ -52,15 +47,15 @@ public class Order {
 		this.user = user;
 	}
 
-	public Order(Long orderId, LocalDateTime orderTime, double orderPrice, User user) {
+	public Order1(Long orderId, double orderPrice, User user) {
 		super();
 		this.orderId = orderId;
-		this.orderTime = orderTime;
+
 		this.orderPrice = orderPrice;
 		this.user = user;
 	}
 
-	public Order() {
+	public Order1() {
 		super();
 	}
     
@@ -68,3 +63,4 @@ public class Order {
 
     // Constructors, getters, and setters
 }
+

@@ -1,4 +1,8 @@
-package entities;
+package com.ecommerce.ecommerce.entities;
+
+
+
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +22,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
-    private Order order;
+    private Order1 order;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -40,11 +44,11 @@ public class OrderItem {
 		this.quantity = quantity;
 	}
 
-	public Order getOrder() {
+	public Order1 getOrder() {
 		return order;
 	}
 
-	public void setOrder(Order order) {
+	public void setOrder(Order1 order) {
 		this.order = order;
 	}
 
@@ -56,7 +60,7 @@ public class OrderItem {
 		this.product = product;
 	}
 
-	public OrderItem(Long orderItemId, int quantity, Order order, Product product) {
+	public OrderItem(Long orderItemId, int quantity, Order1 order, Product product) {
 		super();
 		this.orderItemId = orderItemId;
 		this.quantity = quantity;
