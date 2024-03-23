@@ -19,6 +19,43 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+	public Long getCartId() {
+		return cartId;
+	}
+
+	public void setCartId(Long cartId) {
+		this.cartId = cartId;
+	}
+
+	public Long getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(Long totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Cart(Long cartId, Long totalAmount, User user) {
+		super();
+		this.cartId = cartId;
+		this.totalAmount = totalAmount;
+		this.user = user;
+	}
+
+	public Cart() {
+		super();
+	}
+    
+    
     // Constructors, getters, and setters
 }
 
