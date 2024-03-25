@@ -1,5 +1,6 @@
 package com.ecommerce.ecommerce.controllers;
 
+import com.ecommerce.ecommerce.dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class SignupController {
     private SignupService signupService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDTO> signup(@RequestBody UserDTO userDTO) {
-        UserDTO newUserDTO = signupService.signup(userDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUserDTO);
+    public ResponseEntity<UserResponseDTO> signup(@RequestBody UserDTO userDTO) {
+        UserResponseDTO newUserResponseDTO = signupService.signup(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUserResponseDTO);
     }
 }

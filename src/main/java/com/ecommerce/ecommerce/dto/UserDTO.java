@@ -11,14 +11,7 @@ import lombok.Setter;
 @Setter
 
 public class UserDTO {
-    public UserDTO(Long id, String username, String name, RoleDTO role) {
-		// TODO Auto-generated constructor stub
-    	this.id=id;
-    	this.username=username;
-    	this.name=name;
-    	this.role=role;
-    	
-	}
+
 	private Long id;
     private String username;
     
