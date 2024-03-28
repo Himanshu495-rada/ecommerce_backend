@@ -4,18 +4,15 @@ package com.ecommerce.ecommerce.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class ProductRequestDTO {
-    private Long id;
-    private String name;
-    private String description;
-    private double price;
+    private Long productId;
+    private String productName;
+    private String productDescription;
+    private double productPrice;
 
     private int remainingQuantity;
-    private CategoryDTO categoryDTO;
-    private UserDTO userDTO;
+    private Long categoryId;
+    private Long userId;
 }
 

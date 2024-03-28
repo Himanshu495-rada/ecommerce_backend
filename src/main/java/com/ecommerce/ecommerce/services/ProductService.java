@@ -52,7 +52,7 @@ public class ProductService {
 //        if (!productRepository.existsById(id)) {
 //            throw new ProductNotFoundException("Product not found with id: " + id);
 //        }
-        productRequestDTO.setId(id); // Ensure the ID is set in the DTO
+        productRequestDTO.setProductId(id); // Ensure the ID is set in the DTO
         Product product =productRequestDTOToProduct(productRequestDTO);
 //        Product product = ProductMapper.toEntity(productDTO);
         Product updatedProduct = productRepository.save(product);
