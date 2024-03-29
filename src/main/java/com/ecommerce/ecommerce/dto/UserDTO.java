@@ -1,20 +1,17 @@
 package com.ecommerce.ecommerce.dto;
 
-import com.ecommerce.ecommerce.entities.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Data;
 
 @Data
 public class UserDTO {
 
-	private Long userId;
+    private Long userId;
     private String username;
-    
-//    @JsonIgnore
-    private String password; // Exclude password from serialization
-    
+
+    @JsonIgnore
+    private String password;
     private String name;
     private RoleDTO role;
 
 }
-

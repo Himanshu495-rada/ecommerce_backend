@@ -6,6 +6,6 @@ import com.ecommerce.ecommerce.entities.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    // You can define additional methods here if needed
+    Role findByRoleName(String roleName);
 }
 

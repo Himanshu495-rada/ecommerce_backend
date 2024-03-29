@@ -1,18 +1,15 @@
 package com.ecommerce.ecommerce.dto;
 
-
-
-import lombok.*;
+import lombok.Data;
 
 @Data
-public class ProductRequestDTO {
+public class ProductDTO {
     private Long productId;
     private String productName;
     private String productDescription;
     private double productPrice;
-
     private int remainingQuantity;
-    private Long categoryId;
-    private Long userId;
-}
 
+    private CategoryDTO category;
+    private UserDTO user;
+}

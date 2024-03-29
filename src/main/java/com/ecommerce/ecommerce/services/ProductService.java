@@ -1,80 +1,71 @@
 package com.ecommerce.ecommerce.services;
 
-import com.ecommerce.ecommerce.dto.ProductRequestDTO;
-import com.ecommerce.ecommerce.dto.ProductResponseDTO;
+import com.ecommerce.ecommerce.dto.ProductDTO;
+import com.ecommerce.ecommerce.entities.Category;
 import com.ecommerce.ecommerce.entities.Product;
+import com.ecommerce.ecommerce.entities.User;
+import com.ecommerce.ecommerce.repositories.CategoryRepository;
 import com.ecommerce.ecommerce.repositories.ProductRepository;
+import com.ecommerce.ecommerce.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
     @Autowired
     private ModelMapper modelMapper;
 
-    public Product productRequestDTOToProduct(ProductRequestDTO productRequestDTO ){
-        return modelMapper.map(productRequestDTO,Product.class);
-    }
-    public ProductResponseDTO productToProductResponseDTO(Product product ){
-        return modelMapper.map(product,ProductResponseDTO.class);
-    }
+    @Autowired
+    private UserRepository userRepository;
 
-    public List<ProductResponseDTO> getAllProducts() {
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    public List<ProductDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(this::productToProductResponseDTO)
-                .collect(Collectors.toList());
-
+        return products.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
     }
 
-    public ProductResponseDTO getProductById(Long id) {
-        Product product = productRepository.findById(id).get();
-//                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
-        ProductResponseDTO productResponseDTO=productToProductResponseDTO(product);
-//        product.getCategory().getCategoryId();
-//        product.getUser().getId();
-        return productResponseDTO;
+    public ProductDTO getProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product with ID " + productId + " not found"));
+        return modelMapper.map(product, ProductDTO.class);
     }
 
-    public ProductResponseDTO addProduct(ProductRequestDTO productRequestDTO) {
-        Product product = productRequestDTOToProduct(productRequestDTO);
+    public ProductDTO addProduct(ProductDTO productDTO) {
+        User user = userRepository.findById(productDTO.getUser().getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User with ID " + productDTO.getUser().getUserId() + " not found"));
+        Category category = categoryRepository.findById(productDTO.getCategory().getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category with ID " + productDTO.getCategory().getCategoryId() + " not found"));
+
+        Product product = modelMapper.map(productDTO, Product.class);
+        product.setUser(user);
+        product.setCategory(category);
         Product savedProduct = productRepository.save(product);
-        return productToProductResponseDTO(savedProduct);
+        return modelMapper.map(savedProduct, ProductDTO.class);
     }
 
-    public ProductResponseDTO updateProduct(Long id, ProductRequestDTO productRequestDTO) {
-//        if (!productRepository.existsById(id)) {
-//            throw new ProductNotFoundException("Product not found with id: " + id);
-//        }
-        productRequestDTO.setProductId(id); // Ensure the ID is set in the DTO
-        Product product =productRequestDTOToProduct(productRequestDTO);
-//        Product product = ProductMapper.toEntity(productDTO);
-        Product updatedProduct = productRepository.save(product);
-        return productToProductResponseDTO(updatedProduct);
+    public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
+        Product existingProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product with ID " + productId + " not found"));
+
+        productDTO.setProductId(productId); // Ensure ID matches path variable
+
+        modelMapper.map(productDTO, existingProduct); // Update existing object with non-null DTO fields
+        Product savedProduct = productRepository.save(existingProduct);
+        return modelMapper.map(savedProduct, ProductDTO.class);
     }
 
-    public void deleteProduct(Long id) {
-//        if (!productRepository.existsById(id)) {
-//            throw new ProductNotFoundException("Product not found with id: " + id);
-//        }
-        productRepository.deleteById(id);
+    public void deleteProduct(Long productId) {
+        productRepository.deleteById(productId);
     }
 
-//    public ProductResponseDTO getProductByName(String name) {
-//        Product product = productRepository.findByName(name);
-////                .orElseThrow(() -> new ProductNotFoundException("Product not found with name: " + name));
-//        return productToProductResponseDTO(product);
-//    }
-
-//    public List<ProductDTO> getProductByCategory(String category) {
-//        List<Product> products = productRepository.findByCategory(category);
-//        return ProductMapper.toDTOList(products);
-//    }
 }
-
