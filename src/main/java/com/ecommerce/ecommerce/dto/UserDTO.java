@@ -9,7 +9,7 @@ public class UserDTO {
     private Long userId;
     private String username;
 
-    @JsonIgnore
+    //@JsonIgnore
     private String password;
     private String name;
     private RoleDTO role;

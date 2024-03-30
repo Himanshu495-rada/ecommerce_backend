@@ -18,35 +18,38 @@ public class CartController {
     private CartService cartService;
 
     //get user's cart
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}") //http://localhost:8083/api/cart/3
     public ResponseEntity<CartDTO> getCart(@PathVariable Long userId){
         CartDTO cartDTO = cartService.getCartByUser(userId);
         return ResponseEntity.ok(cartDTO);
     }
 
+    //get all cart items
+    @GetMapping("/{cartId}/items") //http://localhost:8083/api/cart/1/items
+    public ResponseEntity<List<CartItemDTO>> getAllCartItems(@PathVariable Long cartId) {
+        List<CartItemDTO> cartItemDTOs = cartService.getAllCartItems(cartId);
+        return ResponseEntity.ok(cartItemDTOs);
+    }
+
     //add product or item to cart
-    @PostMapping("/{cartId}/add/{productId}")
+    @PostMapping("/{cartId}/add/{productId}") //http://localhost:8083/api/cart/1/add/3
     public ResponseEntity<Void> addItemToCart(@PathVariable Long cartId, @PathVariable Long productId){
         cartService.addItemToCart(cartId, productId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{cartId}/item/{cartItemId}")
+    //delete item from cart
+    @DeleteMapping("/{cartId}/item/{cartItemId}")  //http://localhost:8083/api/cart/1/item/1
     public ResponseEntity<Void> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long cartItemId) {
         cartService.removeItemFromCart(cartId, cartItemId);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{cartId}/item/{cartItemId}")
+    //edit cart items quantity
+    @PutMapping("/{cartId}/item/{cartItemId}") //http://localhost:8083/api/cart/1/item/1
     public ResponseEntity<Void> updateCartItem(@PathVariable Long cartId, @PathVariable Long cartItemId, @RequestParam int quantity) {
         cartService.updateCartItem(cartItemId, quantity);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{cartId}/items")
-    public ResponseEntity<List<CartItemDTO>> getAllCartItems(@PathVariable Long cartId) {
-        List<CartItemDTO> cartItemDTOs = cartService.getAllCartItems(cartId);
-        return ResponseEntity.ok(cartItemDTOs);
     }
 
 }

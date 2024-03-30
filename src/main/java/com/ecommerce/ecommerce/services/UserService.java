@@ -33,10 +33,13 @@ public class UserService {
         User user = modelMapper.map(userDTO, User.class);
         user.setRole(roleRepository.findByRoleName(userDTO.getRole().getRoleName()));
         User savedUser = userRepository.save(user);
-        Cart cart = new Cart();
-        cart.setUser(savedUser);
-        cart.setTotalAmount(Long.valueOf(0));
-        cartRepository.save(cart);
+
+        if(user.getRole().getRoleName() == "customer"){
+            Cart cart = new Cart();
+            cart.setUser(savedUser);
+            cart.setTotalAmount(Long.valueOf(0));
+            cartRepository.save(cart);
+        }
 
         return modelMapper.map(savedUser, UserDTO.class);
     }

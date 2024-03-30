@@ -17,29 +17,32 @@ public class CategoryController {
     @Autowired
     CategoryService categoryService;
 
-    @GetMapping
+    //get all categories
+    @GetMapping  //http://localhost:8083/api/category
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<CategoryDTO> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
 
-    @PostMapping
+    //add category
+    @PostMapping //http://localhost:8083/api/category
     public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO) {
         CategoryDTO savedCategoryDTO = categoryService.addCategory(categoryDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategoryDTO);
     }
 
-    @PutMapping("/{categoryId}")
+    //edit category
+    @PutMapping("/{categoryId}") //http://localhost:8083/api/category/1
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO) {
         categoryDTO.setCategoryId(categoryId); // Ensure ID matches path variable
         CategoryDTO updatedCategoryDTO = categoryService.updateCategory(categoryId, categoryDTO);
         return ResponseEntity.ok(updatedCategoryDTO);
     }
 
-    @DeleteMapping("/{categoryId}")
+    //delete category
+    @DeleteMapping("/{categoryId}") //http://localhost:8083/api/category/1
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
-
 }
