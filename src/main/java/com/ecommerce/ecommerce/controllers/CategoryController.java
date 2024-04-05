@@ -6,6 +6,7 @@ import com.ecommerce.ecommerce.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class CategoryController {
 
     //add category
     @PostMapping //http://localhost:8083/api/category
+    @PreAuthorize("hashRole('ADMIN')")
     public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO) {
         CategoryDTO savedCategoryDTO = categoryService.addCategory(categoryDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategoryDTO);
@@ -33,6 +35,7 @@ public class CategoryController {
 
     //edit category
     @PutMapping("/{categoryId}") //http://localhost:8083/api/category/1
+    @PreAuthorize("hashRole('ADMIN')")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO) {
         categoryDTO.setCategoryId(categoryId); // Ensure ID matches path variable
         CategoryDTO updatedCategoryDTO = categoryService.updateCategory(categoryId, categoryDTO);
@@ -41,6 +44,7 @@ public class CategoryController {
 
     //delete category
     @DeleteMapping("/{categoryId}") //http://localhost:8083/api/category/1
+    @PreAuthorize("hashRole('ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();

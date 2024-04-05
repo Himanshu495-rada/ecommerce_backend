@@ -5,6 +5,7 @@ import com.ecommerce.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,12 +30,14 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hashRole('SELLER')")
     public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
         ProductDTO savedProductDTO = productService.addProduct(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProductDTO);
     }
 
     @PutMapping("/{productId}")
+    @PreAuthorize("hashRole('SELLER')")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductDTO productDTO) {
         productDTO.setProductId(productId);
         ProductDTO updatedProductDTO = productService.updateProduct(productId, productDTO);
@@ -42,6 +45,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
+    @PreAuthorize("hashRole('SELLER')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
