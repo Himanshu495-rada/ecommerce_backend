@@ -8,7 +8,9 @@ public class ProductDTO {
     private String productName;
     private String productDescription;
     private double productPrice;
+    private double sellingPrice;
     private int remainingQuantity;
+    private String image;
 
     private CategoryDTO category;
     private UserDTO user;

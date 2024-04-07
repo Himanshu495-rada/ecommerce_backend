@@ -20,7 +20,9 @@ public class Product {
     private String productName;
     private String productDescription;
     private double productPrice;
+    private double sellingPrice;
     private int remainingQuantity;
+    private String image;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

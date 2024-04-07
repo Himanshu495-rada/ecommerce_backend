@@ -10,8 +10,14 @@ import com.ecommerce.ecommerce.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -28,6 +34,8 @@ public class ProductService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    public final String PATH = "C:/Users/himan/Desktop/my_programs/SpringBoot/ecommerce/productImages";
+
     public List<ProductDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(product -> modelMapper.map(product, ProductDTO.class))
@@ -40,15 +48,25 @@ public class ProductService {
         return modelMapper.map(product, ProductDTO.class);
     }
 
-    public ProductDTO addProduct(ProductDTO productDTO) {
+    public ProductDTO getProductByImage(String productImage) {
+        Product product = productRepository.findByImage(productImage);
+        return modelMapper.map(product, ProductDTO.class);
+    }
+
+    public ProductDTO addProduct(ProductDTO productDTO, MultipartFile image) throws IOException {
         User user = userRepository.findById(productDTO.getUser().getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User with ID " + productDTO.getUser().getUserId() + " not found"));
         Category category = categoryRepository.findById(productDTO.getCategory().getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Category with ID " + productDTO.getCategory().getCategoryId() + " not found"));
 
+        String fileName = UUID.randomUUID().toString() + image.getOriginalFilename();
+        String filePath = PATH + File.separator + fileName;
+        image.transferTo(new File(filePath));
+
         Product product = modelMapper.map(productDTO, Product.class);
         product.setUser(user);
         product.setCategory(category);
+        product.setImage(fileName);
         Product savedProduct = productRepository.save(product);
         return modelMapper.map(savedProduct, ProductDTO.class);
     }

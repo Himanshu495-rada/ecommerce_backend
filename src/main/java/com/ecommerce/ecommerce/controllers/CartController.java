@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
@@ -20,7 +21,7 @@ public class CartController {
 
     //get user's cart
     @GetMapping("/{userId}") //http://localhost:8083/api/cart/3
-    @PreAuthorize("hashRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<CartDTO> getCart(@PathVariable Long userId){
         CartDTO cartDTO = cartService.getCartByUser(userId);
         return ResponseEntity.ok(cartDTO);
@@ -28,7 +29,7 @@ public class CartController {
 
     //get all cart items
     @GetMapping("/{cartId}/items") //http://localhost:8083/api/cart/1/items
-    @PreAuthorize("hashRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<List<CartItemDTO>> getAllCartItems(@PathVariable Long cartId) {
         List<CartItemDTO> cartItemDTOs = cartService.getAllCartItems(cartId);
         return ResponseEntity.ok(cartItemDTOs);
@@ -36,7 +37,7 @@ public class CartController {
 
     //add product or item to cart
     @PostMapping("/{cartId}/add/{productId}") //http://localhost:8083/api/cart/1/add/3
-    @PreAuthorize("hashRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<Void> addItemToCart(@PathVariable Long cartId, @PathVariable Long productId){
         cartService.addItemToCart(cartId, productId);
         return ResponseEntity.ok().build();
@@ -44,7 +45,7 @@ public class CartController {
 
     //delete item from cart
     @DeleteMapping("/{cartId}/item/{cartItemId}")  //http://localhost:8083/api/cart/1/item/1
-    @PreAuthorize("hashRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<Void> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long cartItemId) {
         cartService.removeItemFromCart(cartId, cartItemId);
         return ResponseEntity.noContent().build();
@@ -52,7 +53,7 @@ public class CartController {
 
     //edit cart items quantity
     @PutMapping("/{cartId}/item/{cartItemId}") //http://localhost:8083/api/cart/1/item/1
-    @PreAuthorize("hashRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<Void> updateCartItem(@PathVariable Long cartId, @PathVariable Long cartItemId, @RequestParam int quantity) {
         cartService.updateCartItem(cartItemId, quantity);
         return ResponseEntity.ok().build();

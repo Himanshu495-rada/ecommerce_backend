@@ -8,9 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
@@ -27,15 +30,15 @@ public class CategoryController {
 
     //add category
     @PostMapping //http://localhost:8083/api/category
-    @PreAuthorize("hashRole('ADMIN')")
-    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO) {
-        CategoryDTO savedCategoryDTO = categoryService.addCategory(categoryDTO);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryDTO> addCategory(@ModelAttribute CategoryDTO categoryDTO, @RequestParam("imageFile") MultipartFile image) throws IOException {
+        CategoryDTO savedCategoryDTO = categoryService.addCategory(categoryDTO, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategoryDTO);
     }
 
     //edit category
     @PutMapping("/{categoryId}") //http://localhost:8083/api/category/1
-    @PreAuthorize("hashRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO) {
         categoryDTO.setCategoryId(categoryId); // Ensure ID matches path variable
         CategoryDTO updatedCategoryDTO = categoryService.updateCategory(categoryId, categoryDTO);
@@ -44,7 +47,7 @@ public class CategoryController {
 
     //delete category
     @DeleteMapping("/{categoryId}") //http://localhost:8083/api/category/1
-    @PreAuthorize("hashRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();

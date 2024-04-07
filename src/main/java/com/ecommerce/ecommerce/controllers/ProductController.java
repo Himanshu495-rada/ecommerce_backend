@@ -7,9 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/product")
 public class ProductController {
@@ -30,14 +33,14 @@ public class ProductController {
     }
 
     @PostMapping
-    @PreAuthorize("hashRole('SELLER')")
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
-        ProductDTO savedProductDTO = productService.addProduct(productDTO);
+    @PreAuthorize("hasRole('SELLER')")
+    public ResponseEntity<ProductDTO> addProduct(@ModelAttribute ProductDTO productDTO, @RequestParam("imageFile") MultipartFile image) throws IOException {
+        ProductDTO savedProductDTO = productService.addProduct(productDTO, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProductDTO);
     }
 
     @PutMapping("/{productId}")
-    @PreAuthorize("hashRole('SELLER')")
+    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductDTO productDTO) {
         productDTO.setProductId(productId);
         ProductDTO updatedProductDTO = productService.updateProduct(productId, productDTO);
@@ -45,7 +48,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    @PreAuthorize("hashRole('SELLER')")
+    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
