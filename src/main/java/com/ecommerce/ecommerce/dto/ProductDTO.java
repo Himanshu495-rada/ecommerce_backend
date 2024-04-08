@@ -12,6 +12,6 @@ public class ProductDTO {
     private int remainingQuantity;
     private String image;
 
-    private CategoryDTO category;
-    private UserDTO user;
+    private Long categoryId;
+    private Long userId;
 }

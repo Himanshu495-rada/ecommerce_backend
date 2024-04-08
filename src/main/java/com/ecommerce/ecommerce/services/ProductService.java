@@ -48,16 +48,26 @@ public class ProductService {
         return modelMapper.map(product, ProductDTO.class);
     }
 
+    public List<ProductDTO> getAllProductsByUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User with Id " + userId + " not found"));
+
+        List<Product> products = productRepository.findByUser(user);
+
+        return products.stream().map(product -> modelMapper.map(product, ProductDTO.class)).toList();
+
+    }
+
     public ProductDTO getProductByImage(String productImage) {
         Product product = productRepository.findByImage(productImage);
         return modelMapper.map(product, ProductDTO.class);
     }
 
     public ProductDTO addProduct(ProductDTO productDTO, MultipartFile image) throws IOException {
-        User user = userRepository.findById(productDTO.getUser().getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User with ID " + productDTO.getUser().getUserId() + " not found"));
-        Category category = categoryRepository.findById(productDTO.getCategory().getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Category with ID " + productDTO.getCategory().getCategoryId() + " not found"));
+        User user = userRepository.findById(productDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User with ID " + productDTO.getUserId() + " not found"));
+        Category category = categoryRepository.findById(productDTO.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category with ID " + productDTO.getCategoryId() + " not found"));
 
         String fileName = UUID.randomUUID().toString() + image.getOriginalFilename();
         String filePath = PATH + File.separator + fileName;

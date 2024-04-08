@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce.repositories;
 
 import com.ecommerce.ecommerce.entities.Product;
+import com.ecommerce.ecommerce.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -14,5 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 //    List<Product> findByCategory(String category);
     Product findByImage(String image);
+
+    List<Product> findByUser(User user);
 }
 

@@ -32,6 +32,13 @@ public class ProductController {
         return ResponseEntity.ok(productDTO);
     }
 
+    @GetMapping("/seller/{userId}")
+    @PreAuthorize("hasRole('SELLER')")
+    public ResponseEntity<List<ProductDTO>> getAllProductsByUser(@PathVariable Long userId) {
+        List<ProductDTO> products = productService.getAllProductsByUser(userId);
+        return ResponseEntity.ok(products);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<ProductDTO> addProduct(@ModelAttribute ProductDTO productDTO, @RequestParam("imageFile") MultipartFile image) throws IOException {
