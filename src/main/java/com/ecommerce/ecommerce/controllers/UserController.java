@@ -1,9 +1,6 @@
 package com.ecommerce.ecommerce.controllers;
 
-import com.ecommerce.ecommerce.dto.AddressDTO;
-import com.ecommerce.ecommerce.dto.JwtAuthResponseDTO;
-import com.ecommerce.ecommerce.dto.LoginDTO;
-import com.ecommerce.ecommerce.dto.UserDTO;
+import com.ecommerce.ecommerce.dto.*;
 import com.ecommerce.ecommerce.entities.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> signup(@RequestBody SignupDTO userDTO) {
         String message = userService.signup(userDTO);
         return ResponseEntity.ok(message);
     }

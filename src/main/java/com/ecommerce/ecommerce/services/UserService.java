@@ -51,7 +51,7 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public String signup(UserDTO userDTO) {
+    public String signup(SignupDTO userDTO) {
         User user = modelMapper.map(userDTO, User.class);
 
         Boolean stat = userRepository.existsByEmail(user.getEmail());
