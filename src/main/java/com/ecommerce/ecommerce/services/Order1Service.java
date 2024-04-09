@@ -2,6 +2,7 @@ package com.ecommerce.ecommerce.services;
 
 import com.ecommerce.ecommerce.dto.AddressDTO;
 import com.ecommerce.ecommerce.dto.Order1DTO;
+import com.ecommerce.ecommerce.dto.OrderRequestDTO;
 import com.ecommerce.ecommerce.entities.*;
 import com.ecommerce.ecommerce.repositories.*;
 import org.modelmapper.ModelMapper;
@@ -47,10 +48,10 @@ public class Order1Service {
         return orders.stream().map(order -> modelMapper.map(order, Order1DTO.class)).toList();
     }
 
-    public Order1DTO createOrder(Long cartId, Long userId, Long addressId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User with ID " + userId + "not found"));
+    public Order1DTO createOrder(OrderRequestDTO orderRequestDTO) {
+        User user = userRepository.findById(orderRequestDTO.getUserId()).orElseThrow(() -> new IllegalArgumentException("User with ID " + orderRequestDTO.getUserId() + "not found"));
         Cart cart = cartRepository.findByUser(user);
-        Address address = addressRepository.findById(addressId).orElseThrow(() -> new IllegalArgumentException("Address with ID " + addressId + "not found"));
+        Address address = addressRepository.findById(orderRequestDTO.getAddressId()).orElseThrow(() -> new IllegalArgumentException("Address with ID " + orderRequestDTO.getAddressId() + "not found"));
 
         Order1 order1 = new Order1();
         order1.setUser(user);

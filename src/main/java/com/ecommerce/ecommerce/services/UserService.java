@@ -1,9 +1,11 @@
 package com.ecommerce.ecommerce.services;
 
 import com.ecommerce.ecommerce.dto.*;
+import com.ecommerce.ecommerce.entities.Address;
 import com.ecommerce.ecommerce.entities.Cart;
 import com.ecommerce.ecommerce.entities.Role;
 import com.ecommerce.ecommerce.exception.AuthAPIException;
+import com.ecommerce.ecommerce.repositories.AddressRepository;
 import com.ecommerce.ecommerce.repositories.CartRepository;
 import com.ecommerce.ecommerce.security.JwtTokenProvider;
 import org.modelmapper.ModelMapper;
@@ -22,11 +24,16 @@ import com.ecommerce.ecommerce.entities.User;
 import com.ecommerce.ecommerce.repositories.RoleRepository;
 import com.ecommerce.ecommerce.repositories.UserRepository;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Autowired
     private CartRepository cartRepository;
@@ -90,5 +97,11 @@ public class UserService {
         jwtAuthResponseDTO.setAccessToken(token);
 
         return jwtAuthResponseDTO;
+    }
+
+    public UserDTO getUserInfo(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User with userID: " + userId + " not found" ));
+        return modelMapper.map(user, UserDTO.class);
     }
 }

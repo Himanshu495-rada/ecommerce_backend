@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce.services;
 
 import com.ecommerce.ecommerce.dto.ProductDTO;
+import com.ecommerce.ecommerce.dto.ProductResponseDTO;
 import com.ecommerce.ecommerce.entities.Category;
 import com.ecommerce.ecommerce.entities.Product;
 import com.ecommerce.ecommerce.entities.User;
@@ -36,34 +37,34 @@ public class ProductService {
 
     public final String PATH = "C:/Users/himan/Desktop/my_programs/SpringBoot/ecommerce/productImages";
 
-    public List<ProductDTO> getAllProducts() {
+    public List<ProductResponseDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
-        return products.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+        return products.stream().map(product -> modelMapper.map(product, ProductResponseDTO.class))
                 .toList();
     }
 
-    public ProductDTO getProduct(Long productId) {
+    public ProductResponseDTO getProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product with ID " + productId + " not found"));
-        return modelMapper.map(product, ProductDTO.class);
+        return modelMapper.map(product, ProductResponseDTO.class);
     }
 
-    public List<ProductDTO> getAllProductsByUser(Long userId) {
+    public List<ProductResponseDTO> getAllProductsByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with Id " + userId + " not found"));
 
         List<Product> products = productRepository.findByUser(user);
 
-        return products.stream().map(product -> modelMapper.map(product, ProductDTO.class)).toList();
+        return products.stream().map(product -> modelMapper.map(product, ProductResponseDTO.class)).toList();
 
     }
 
-    public ProductDTO getProductByImage(String productImage) {
+    public ProductResponseDTO getProductByImage(String productImage) {
         Product product = productRepository.findByImage(productImage);
-        return modelMapper.map(product, ProductDTO.class);
+        return modelMapper.map(product, ProductResponseDTO.class);
     }
 
-    public ProductDTO addProduct(ProductDTO productDTO, MultipartFile image) throws IOException {
+    public ProductResponseDTO addProduct(ProductDTO productDTO, MultipartFile image) throws IOException {
         User user = userRepository.findById(productDTO.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User with ID " + productDTO.getUserId() + " not found"));
         Category category = categoryRepository.findById(productDTO.getCategoryId())
@@ -78,18 +79,33 @@ public class ProductService {
         product.setCategory(category);
         product.setImage(fileName);
         Product savedProduct = productRepository.save(product);
-        return modelMapper.map(savedProduct, ProductDTO.class);
+        return modelMapper.map(savedProduct, ProductResponseDTO.class);
     }
 
-    public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
+    public ProductResponseDTO updateProduct(Long productId, ProductDTO productDTO, MultipartFile image) throws IOException {
         Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product with ID " + productId + " not found"));
 
         productDTO.setProductId(productId); // Ensure ID matches path variable
-
         modelMapper.map(productDTO, existingProduct); // Update existing object with non-null DTO fields
+
+        if(image != null && !image.isEmpty() && productDTO.getImage() != null){
+            String filePath = PATH + File.separator + existingProduct.getImage();
+            File existingImage = new File(filePath);
+            boolean fileDeletion = existingImage.delete();
+            if (!fileDeletion) {
+                throw new IOException("Failed to delete image: " + filePath);
+            }
+            String newFilePath =  PATH + File.separator + UUID.randomUUID().toString() + image.getOriginalFilename();
+            image.transferTo(new File(newFilePath));
+            productDTO.setImage(newFilePath);
+        }else {
+            productDTO.setImage(existingProduct.getImage());
+        }
+
+
         Product savedProduct = productRepository.save(existingProduct);
-        return modelMapper.map(savedProduct, ProductDTO.class);
+        return modelMapper.map(savedProduct, ProductResponseDTO.class);
     }
 
     public void deleteProduct(Long productId) {

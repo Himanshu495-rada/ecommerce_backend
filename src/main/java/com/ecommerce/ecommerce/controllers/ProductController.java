@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce.controllers;
 
 import com.ecommerce.ecommerce.dto.ProductDTO;
+import com.ecommerce.ecommerce.dto.ProductResponseDTO;
 import com.ecommerce.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,36 +22,36 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        List<ProductDTO> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
+        List<ProductResponseDTO> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductDTO> getProduct(@PathVariable Long productId) {
-        ProductDTO productDTO = productService.getProduct(productId);
-        return ResponseEntity.ok(productDTO);
+    public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable Long productId) {
+        ProductResponseDTO productResponseDTO = productService.getProduct(productId);
+        return ResponseEntity.ok(productResponseDTO);
     }
 
     @GetMapping("/seller/{userId}")
     @PreAuthorize("hasRole('SELLER')")
-    public ResponseEntity<List<ProductDTO>> getAllProductsByUser(@PathVariable Long userId) {
-        List<ProductDTO> products = productService.getAllProductsByUser(userId);
+    public ResponseEntity<List<ProductResponseDTO>> getAllProductsByUser(@PathVariable Long userId) {
+        List<ProductResponseDTO> products = productService.getAllProductsByUser(userId);
         return ResponseEntity.ok(products);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('SELLER')")
-    public ResponseEntity<ProductDTO> addProduct(@ModelAttribute ProductDTO productDTO, @RequestParam("imageFile") MultipartFile image) throws IOException {
-        ProductDTO savedProductDTO = productService.addProduct(productDTO, image);
+    public ResponseEntity<ProductResponseDTO> addProduct(@ModelAttribute ProductDTO productDTO, @RequestParam("imageFile") MultipartFile image) throws IOException {
+        ProductResponseDTO savedProductDTO = productService.addProduct(productDTO, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProductDTO);
     }
 
     @PutMapping("/{productId}")
     @PreAuthorize("hasRole('SELLER')")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId, @ModelAttribute ProductDTO productDTO, @RequestParam(value = "imageFile", required = false) MultipartFile image) throws IOException {
         productDTO.setProductId(productId);
-        ProductDTO updatedProductDTO = productService.updateProduct(productId, productDTO);
+        ProductResponseDTO updatedProductDTO = productService.updateProduct(productId, productDTO, image);
         return ResponseEntity.ok(updatedProductDTO);
     }
 

@@ -31,8 +31,8 @@ public class CategoryController {
     //add category
     @PostMapping //http://localhost:8083/api/category
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CategoryDTO> addCategory(@ModelAttribute CategoryDTO categoryDTO, @RequestParam("imageFile") MultipartFile image) throws IOException {
-        CategoryDTO savedCategoryDTO = categoryService.addCategory(categoryDTO, image);
+    public ResponseEntity<CategoryDTO> addCategory(@ModelAttribute CategoryDTO categoryDTO) {
+        CategoryDTO savedCategoryDTO = categoryService.addCategory(categoryDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategoryDTO);
     }
 

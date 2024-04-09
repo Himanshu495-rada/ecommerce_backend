@@ -28,8 +28,8 @@ public class AddressController {
 
     @PostMapping //http://localhost:8083/api/address
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<AddressDTO> createAddress(@RequestBody AddressDTO addressDTO) {
-        AddressDTO savedAddressDTO = addressService.createAddress(addressDTO);
+    public ResponseEntity<AddressDTO> createAddress(@RequestBody AddressDTO addressDTO, @RequestParam Long userId) {
+        AddressDTO savedAddressDTO = addressService.createAddress(addressDTO, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAddressDTO);
     }
 

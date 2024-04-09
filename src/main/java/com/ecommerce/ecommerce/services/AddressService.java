@@ -35,8 +35,11 @@ public class AddressService {
         return modelMapper.map(address, AddressDTO.class);
     }
 
-    public AddressDTO createAddress(AddressDTO addressDTO) {
+    public AddressDTO createAddress(AddressDTO addressDTO, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User with ID" + userId + "not found"));
+
         Address address = modelMapper.map(addressDTO, Address.class);
+        address.setUser(user);
         Address savedAddress = addressRepository.save(address);
         return modelMapper.map(savedAddress, AddressDTO.class);
     }

@@ -29,14 +29,9 @@ public class CategoryService {
         return categories.stream().map(category -> modelMapper.map(category, CategoryDTO.class)).toList();
     }
 
-    public CategoryDTO addCategory(CategoryDTO categoryDTO, MultipartFile image) throws IOException {
+    public CategoryDTO addCategory(CategoryDTO categoryDTO) {
         Category category = modelMapper.map(categoryDTO, Category.class);
 
-        String fileName = UUID.randomUUID().toString() + image.getOriginalFilename();
-        String filePath = PATH + File.separator + fileName;
-        image.transferTo(new File(filePath));
-
-        category.setImage(fileName);
         Category savedCategory = categoryRepository.save(category);
         return modelMapper.map(savedCategory, CategoryDTO.class);
     }

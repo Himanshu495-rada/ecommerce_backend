@@ -2,6 +2,8 @@ package com.ecommerce.ecommerce.controllers;
 
 import com.ecommerce.ecommerce.dto.CartDTO;
 import com.ecommerce.ecommerce.dto.CartItemDTO;
+import com.ecommerce.ecommerce.dto.CartItemUpdateDTO;
+import com.ecommerce.ecommerce.dto.CartRequestDTO;
 import com.ecommerce.ecommerce.services.CartService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,34 +30,34 @@ public class CartController {
     }
 
     //get all cart items
-    @GetMapping("/{cartId}/items") //http://localhost:8083/api/cart/1/items
+    @GetMapping("/{userId}/items") //http://localhost:8083/api/cart/1/items
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<List<CartItemDTO>> getAllCartItems(@PathVariable Long cartId) {
-        List<CartItemDTO> cartItemDTOs = cartService.getAllCartItems(cartId);
+    public ResponseEntity<List<CartItemDTO>> getAllCartItems(@PathVariable Long userId) {
+        List<CartItemDTO> cartItemDTOs = cartService.getAllCartItemsByUser(userId);
         return ResponseEntity.ok(cartItemDTOs);
     }
 
     //add product or item to cart
-    @PostMapping("/{cartId}/add/{productId}") //http://localhost:8083/api/cart/1/add/3
+    @PostMapping("/add") //http://localhost:8083/api/cart/1/add/3
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<Void> addItemToCart(@PathVariable Long cartId, @PathVariable Long productId){
-        cartService.addItemToCart(cartId, productId);
+    public ResponseEntity<Void> addItemToCart(@ModelAttribute CartRequestDTO cartRequestDTO){
+        cartService.addItemToCart(cartRequestDTO);
         return ResponseEntity.ok().build();
     }
 
     //delete item from cart
-    @DeleteMapping("/{cartId}/item/{cartItemId}")  //http://localhost:8083/api/cart/1/item/1
+    @DeleteMapping("/{cartItemId}")  //http://localhost:8083/api/cart/1/item/1
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<Void> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long cartItemId) {
-        cartService.removeItemFromCart(cartId, cartItemId);
+    public ResponseEntity<Void> removeItemFromCart(@PathVariable Long cartItemId) {
+        cartService.removeItemFromCart(cartItemId);
         return ResponseEntity.noContent().build();
     }
 
     //edit cart items quantity
-    @PutMapping("/{cartId}/item/{cartItemId}") //http://localhost:8083/api/cart/1/item/1
+    @PutMapping("/update") //http://localhost:8083/api/cart/1/item/1
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<Void> updateCartItem(@PathVariable Long cartId, @PathVariable Long cartItemId, @RequestParam int quantity) {
-        cartService.updateCartItem(cartItemId, quantity);
+    public ResponseEntity<Void> updateCartItemQuantity(@ModelAttribute CartItemUpdateDTO cartItemUpdateDTO) {
+        cartService.updateCartItemQuantity(cartItemUpdateDTO);
         return ResponseEntity.ok().build();
     }
 
